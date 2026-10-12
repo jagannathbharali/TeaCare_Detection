@@ -1,0 +1,105 @@
+app:
+  author: TeaGuard Research Lab
+  name: TeaGuard AI
+  version: 1.0.0
+
+diseases:
+  # Must match the 'names' in data.yaml exactly
+  classes:
+    - 'Black rot of tea'
+    - 'Brown blight of tea'
+    - 'Leaf rust of tea'
+    - 'Red Spider infested'
+    - 'Tea Mosquito bug inf'
+    - 'Tea leaf'
+    - 'White spot of tea'
+    - 'disease'
+
+  # How these appear in your App's UI
+  display_names:
+    'Black rot of tea': "Black Rot"
+    'Brown blight of tea': "Brown Blight"
+    'Leaf rust of tea': "Leaf Rust"
+    'Red Spider infested': "Red Spider Attack"
+    'Tea Mosquito bug inf': "Mosquito Bug"
+    'Tea leaf': "Healthy"
+    'White spot of tea': "White Spot"
+    'disease': "Generic Infection"
+
+  # Severity Scale (0 = Healthy, 4 = Critical)
+  severity:
+    'Black rot of tea': 3
+    'Brown blight of tea': 2
+    'Leaf rust of tea': 2
+    'Red Spider infested': 4
+    'Tea Mosquito bug inf': 4
+    'Tea leaf': 0
+    'White spot of tea': 1
+    'disease': 2
+
+  # Economic Impact Percentages
+  crop_loss_pct:
+    'Black rot of tea': 45.0
+    'Brown blight of tea': 30.0
+    'Leaf rust of tea': 15.0
+    'Red Spider infested': 65.0
+    'Tea Mosquito bug inf': 55.0
+    'Tea leaf': 0.0
+    'White spot of tea': 10.0
+    'disease': 25.0
+
+economics:
+  avg_estate_hectares: 50
+  avg_price_per_kg_usd: 3.5
+  avg_yield_kg_per_hectare: 2500
+  currency: USD
+  currency_symbol: $
+
+llm:
+  host: http://localhost:11434
+  max_tokens: 2048
+  model: mistral
+  timeout: 120
+
+paths:
+  data_root:    "/home/manash/MINI_PROJECT/Tea_Leaves_Dataset"
+  data_yaml:    "/home/manash/MINI_PROJECT/Tea_Leaves_Dataset/data.yaml"
+  train_images: "/home/manash/MINI_PROJECT/Tea_Leaves_Dataset/train/images"
+  val_images:   "/home/manash/MINI_PROJECT/Tea_Leaves_Dataset/valid/images"
+  test_images:  "/home/manash/MINI_PROJECT/Tea_Leaves_Dataset/test/images"
+  model_dir:    "models"
+  reports_dir:  "reports"
+  assets_dir:   "assets"
+
+# MAKE SURE THIS LINE HAS ZERO SPACES AT THE START
+preprocessing:
+  target_size: [640, 640]
+  denoise:
+    enabled: true
+    h: 10
+    template_window: 7
+    search_window: 21
+  clahe:
+    enabled: true
+    clip_limit: 2.0
+    tile_grid: [8, 8]
+  freq_domain:
+    enabled: true
+    cutoff_ratio: 0.3
+    butterworth_order: 2
+  sharpen:
+    enabled: true
+    kernel_strength: 1.5
+
+yolo:
+  model_base: yolov8n.pt    # Switched to Nano for CPU/RAM safety
+  task: detect
+  imgsz: 640
+  epochs: 50
+  batch: 4                 # Lowered to prevent 'Killed' memory errors
+  conf_thresh: 0.10
+  device: auto
+  augment: true
+  patience: 10
+  lr0: 0.001
+  workers: 2
